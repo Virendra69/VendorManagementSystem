@@ -1,0 +1,361 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  background-color: #ede8f5;
+}
+
+#headingBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+}
+
+#headingBox > h1 {
+  width: fit-content;
+}
+
+#leftContainer {
+  border: 1px solid;
+  border-radius: 10px;
+
+  width: 45%;
+  height: 95%;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  background-color: #adbbda;
+}
+
+#firstRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  width: 100%;
+  height: 30%;
+}
+
+#secondRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  width: 100%;
+  height: 20%;
+}
+
+#thirdRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  width: 100%;
+  height: 30%;
+}
+
+h1,
+h2 {
+  text-align: center;
+  width: 100%;
+}
+
+#addPurchaseOrderBox {
+  border: 1px solid;
+  border-radius: 10px;
+
+  width: 95%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  background-color: #ede8f5;
+}
+
+#upperHalf {
+  width: 100%;
+  height: 65%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#leftHalf {
+  border: 1px solid green;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  box-sizing: border-box;
+  padding: 1%;
+
+  width: 45%;
+  height: 100%;
+}
+
+#leftHalf > input {
+  box-sizing: border-box;
+  padding-left: 2%;
+  border: 1px solid;
+  border-radius: 10px;
+}
+
+#leftHalf > div > input {
+  box-sizing: border-box;
+  padding: 0% 2%;
+  border: 1px solid;
+  border-radius: 10px;
+}
+
+#rightHalf {
+  border: 1px solid green;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  box-sizing: border-box;
+  padding: 1%;
+
+  width: 45%;
+  height: 100%;
+}
+
+#rightHalf > input {
+  box-sizing: border-box;
+  padding-left: 2%;
+  border: 1px solid;
+}
+
+#items {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  box-sizing: border-box;
+  padding: 2%;
+
+  overflow-y: scroll;
+}
+
+#rightHalf > button {
+  width: 40%;
+  height: 15%;
+  border: none;
+  border-radius: 10px;
+  background-color: #5ab2ff;
+  cursor: pointer;
+}
+
+#rightHalf > button:hover {
+  background-color: #a0deff;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+}
+
+.item > input {
+  box-sizing: border-box;
+  padding-left: 2%;
+  border: 1px solid;
+  border-radius: 10px;
+}
+
+#lowerHalf {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#lowerHalf > button {
+  width: 40%;
+  height: 100%;
+  border: none;
+  border-radius: 10px;
+  background-color: #5ab2ff;
+  cursor: pointer;
+}
+
+#lowerHalf > button:hover {
+  background-color: #a0deff;
+}
+
+#getPurchaseOrderBox,
+#getAllPurchaseOrdersBox,
+#updatePurchaseOrderBox,
+#deletePurchaseOrderBox {
+  border: 1px solid;
+  border-radius: 10px;
+
+  width: 45%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  padding-bottom: 1%;
+
+  box-sizing: border-box;
+
+  background-color: #ede8f5;
+
+  > input {
+    box-sizing: border-box;
+    padding-left: 2%;
+    border: 1px solid;
+    border-radius: 10px;
+  }
+}
+
+#updatePurchaseOrderBox > div > input,
+#updatePurchaseOrderBox > select {
+  box-sizing: border-box;
+  padding: 0% 2%;
+  border: 1px solid;
+  border-radius: 10px;
+}
+
+#getAllPurchaseOrdersBox > button {
+  width: 50%;
+  height: 30%;
+  border: none;
+  border-radius: 10px;
+  background-color: #5ab2ff;
+  cursor: pointer;
+}
+
+#getAllPurchaseOrdersBox > button:hover {
+  background-color: #a0deff;
+}
+
+#getPurchaseOrderBox,
+#updatePurchaseOrderBox,
+#deletePurchaseOrderBox {
+  > button {
+    width: 50%;
+    height: 20%;
+    border: none;
+    border-radius: 10px;
+    background-color: #5ab2ff;
+    cursor: pointer;
+  }
+}
+
+#addPurchaseOrderBox,
+#getPurchaseOrderBox,
+#updatePurchaseOrderBox,
+#deletePurchaseOrderBox {
+  > button:hover {
+    background-color: #a0deff;
+  }
+}
+
+#deliveryDateBox,
+#issueDateBox,
+#orderDateBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+
+  width: 100%;
+}
+
+#detailsBox {
+  border: 1px solid;
+  border-radius: 10px;
+
+  width: 45%;
+  height: 95%;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+
+  overflow-y: scroll;
+
+  background-color: #adbbda;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #adbbda;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.details {
+  border: 1px solid;
+  border-radius: 10px;
+
+  width: 75%;
+  height: auto;
+
+  margin: 2% 0%;
+  padding: 4%;
+  box-sizing: border-box;
+
+  background-color: #ede8f5;
+}

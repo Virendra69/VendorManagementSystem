@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/vendor.css' %}" />
+    <title>Vendor Page</title>
+  </head>
+  <body>
+    <div id="leftContainer">
+      <div id="headingBox">
+        <a href="{% url 'homePage' %}">Home Page</a>
+        <h1>Vendor</h1>
+        <a href="{% url 'purchaseOrderPage' %}">Purchase Order Page</a>
+      </div>
+      <div id="firstRow">
+        <!-- POST Request : Add a new Vendor -->
+        <form
+          action="{% url 'addVendor' %}"
+          method="post"
+          enctype="multipart/form-data"
+          id="addVendorBox"
+        >
+          <h2>Add Vendor</h2>
+          {% csrf_token %}
+          <input type="text" name="name" id="name" placeholder="Name" required />
+          <input
+            type="text"
+            name="contact_details"
+            id="contact_details"
+            placeholder="Contact Details"
+            required
+          />
+          <input
+            type="text"
+            name="address"
+            id="address"
+            placeholder="Address"
+            required
+          />
+          <button type="submit" id="addVendor">Add Vendor</button>
+        </form>
+
+        <!-- GET Request : Get details of a particular Vendor -->
+        <form
+          action="{% url 'getVendor' 'vendor_id' %}"
+          method="get"
+          id="getVendorBox"
+        >
+          <h2>Get Vendor</h2>
+          <input
+            type="text"
+            name="vendor_id"
+            id="vendor_id"
+            placeholder="Vendor ID"
+            required
+          />
+          <button id="getVendor">Get Vendor</button>
+        </form>
+      </div>
+      <div id="secondRow">
+        <!-- GET Request : Get details of all Vendors -->
+        <form
+          action="{% url 'getAllVendors' %}"
+          method="get"
+          id="getAllVendorsBox"
+        >
+          <h2>Get All Vendors</h2>
+          <button type="submit" id="getAllVendors">Get All Vendors</button>
+        </form>
+
+        <!-- PUT Request : Update a particular Vendor -->
+        <div id="updateVendorBox">
+          <h2>Update Vendor</h2>
+          <input
+            type="text"
+            name="updated_vendor_id"
+            id="updated_vendor_id"
+            placeholder="Vendor ID"
+          />
+          <input
+            type="text"
+            name="updated_name"
+            id="updated_name"
+            placeholder="Name"
+          />
+          <input
+            type="text"
+            name="updated_contact_details"
+            id="updated_contact_details"
+            placeholder="Contact Details"
+          />
+          <input
+            type="text"
+            name="updated_address"
+            id="updated_address"
+            placeholder="Address"
+          />
+          <button id="updateVendor">Update Vendor</button>
+        </div>
+      </div>
+
+      <div id="thirdRow">
+        <!-- DELETE Request : Delete a particular Vendor -->
+        <div id="deleteVendorBox">
+          <h2>Delete Vendor</h2>
+          <input
+            type="text"
+            name="delete_vendor_id"
+            id="delete_vendor_id"
+            placeholder="Vendor ID"
+          />
+          <button id="deleteVendor">Delete Vendor</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details Box : Display the data fetched from the backend/database -->
+    <div id="detailsBox">
+      {% if vendor %}
+      <div class="details">
+        <h1>Vendor ID: {{vendor.vendor_code}}</h1>
+        <p><strong>Name:</strong> {{vendor.name}}</p>
+        <p><strong>Contact Details:</strong> {{vendor.contact_details}}</p>
+        <p><strong>Address:</strong> {{vendor.address}}</p>
+        <p>
+          <strong>On Time Delivery Rate:</strong>
+          {{vendor.on_time_delivery_rate}}
+        </p>
+        <p>
+          <strong>Quality Rating Average:</strong> {{vendor.quality_rating_avg}}
+        </p>
+        <p>
+          <strong>Average Response Time:</strong>
+          {{vendor.average_response_time}}
+        </p>
+        <p><strong>Fulfillment Rate:</strong> {{vendor.fulfillment_rate}}</p>
+      </div>
+      {% endif %} 
+
+      {% if vendors %} 
+      {% for v in vendors %}
+      <div class="details">
+        <h1>Vendor ID: {{v.vendor_code}}</h1>
+        <p><strong>Name:</strong> {{v.name}}</p>
+        <p><strong>Contact Details:</strong> {{v.contact_details}}</p>
+        <p><strong>Address:</strong> {{v.address}}</p>
+        <p>
+          <strong>On Time Delivery Rate:</strong> {{v.on_time_delivery_rate}}
+        </p>
+        <p><strong>Quality Rating Average:</strong> {{v.quality_rating_avg}}</p>
+        <p>
+          <strong>Average Response Time:</strong> {{v.average_response_time}}
+        </p>
+        <p><strong>Fulfillment Rate:</strong> {{v.fulfillment_rate}}</p>
+      </div>
+      {% endfor %} 
+      {% endif %}
+    </div>
+    <script>
+      // For printing the messages sent from backend for POST and GET Requests
+      var message = "{{ message }}";
+      if (message.length > 0) {
+        alert(message);
+      }
+
+      // PUT Request to update a particular vendor
+      document
+        .getElementById("updateVendor")
+        .addEventListener("click", function () {
+          var vendor_id = document.getElementById("updated_vendor_id").value;
+          var name = document.getElementById("updated_name").value;
+          var contact_details = document.getElementById("updated_contact_details").value;
+          var address = document.getElementById("updated_address").value;
+
+          if (vendor_id && (name || contact_details || address)) {
+            var url = "/api/vendors/" + vendor_id;
+
+            var data = {
+              vendor_id: vendor_id,
+              name: name,
+              contact_details: contact_details,
+              address: address,
+            };
+
+            fetch(url, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify(data),
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  alert("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                alert(data["message"]);
+                location.reload();
+              })
+              .catch((error) => {
+                alert(error);
+              });
+            }
+          else {
+            alert("Provide all the details!!");
+          }
+        });
+
+      // DELETE Request to a delete a particular vendor
+      document
+        .getElementById("deleteVendor")
+        .addEventListener("click", function () {
+          var vendor_id = document.getElementById("delete_vendor_id").value;
+
+          if (vendor_id) {
+            var url = "/api/vendors/" + vendor_id;
+            
+            fetch(url, {
+              method: "DELETE",
+              headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  alert("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                alert(data["message"]);
+                location.reload();
+              })
+              .catch((error) => {
+                alert(error);
+              });
+          }
+          else {
+            alert("Provide the Purchase Order ID!!");
+          }
+        });
+
+      // Function to get CSRF token from cookies
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          var cookies = document.cookie.split(";");
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+    </script>
+  </body>
+</html>

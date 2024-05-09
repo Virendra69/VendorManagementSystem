@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+    <title>HOME</title>
+  </head>
+  <body>
+    <div id="title">Vendor Manangement System</div>
+    <div id="vpo">
+      <div id="v">Vendor Page</div>
+      <div id="po">Purchase Order Page</div>
+    </div>
+    <div id="p">Performance History Page</div>
+    <script>
+      document.getElementById("v").addEventListener("click", function () {
+        window.location.href = "vendors/";
+      });
+      document.getElementById("po").addEventListener("click", function () {
+        window.location.href = "purchase_orders/";
+      });
+      document.getElementById("p").addEventListener("click", function () {
+        window.location.href = "performance_history/";
+      });
+    </script>
+  </body>
+</html>

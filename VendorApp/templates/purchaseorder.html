@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/purchaseorder.css' %}" />
+    <title>Purchase Order Page</title>
+  </head>
+  <body>
+    <!-- Functionalities to manage the Purchase Orders -->
+    <div id="leftContainer">
+      <div id="headingBox">
+        <a href="{% url 'homePage' %}">Home Page</a>
+        <h1>Purchase Order</h1>
+        <a href="{% url 'vendorPage' %}">Vendor Page</a>
+      </div>
+      <div id="firstRow">
+        <!-- POST Request : Add a new Purchase Order -->
+        <div id="addPurchaseOrderBox">
+          <h2>Add Purchase Order</h2>
+          <div id="upperHalf">
+            <div id="leftHalf">
+              <input
+                type="text"
+                name="vendor_id"
+                id="vendor_id"
+                placeholder="Vendor ID"
+              />
+              <div id="orderDateBox">
+                <label for="order_date">Order Date: </label>
+                <input
+                  type="datetime-local"
+                  name="order_date"
+                  id="order_date"
+                />
+              </div>
+              <div id="deliveryDateBox">
+                <label for="delivery_date">Delivery Date: </label>
+                <input
+                  type="datetime-local"
+                  name="delivery_date"
+                  id="delivery_date"
+                />
+              </div>
+            </div>
+            <div id="rightHalf">
+              <ul id="items">
+                <li class="item">
+                  <strong>Item 1</strong>
+                  <input
+                    type="text"
+                    name="itemname"
+                    class="itemname"
+                    placeholder="Item Name"
+                  />
+                  <input
+                    type="text"
+                    name="itemdetails"
+                    class="itemdetails"
+                    placeholder="Item Details"
+                  />
+                  <input
+                    type="number"
+                    name="itemquantity"
+                    class="itemquantity"
+                    placeholder="Item Quantity"
+                    min="1"
+                    value="1"
+                  />
+                </li>
+              </ul>
+              <button id="addItem">Add Item</button>
+            </div>
+          </div>
+          <div id="lowerHalf">
+            <button id="addPurchaseOrder">Add Purchase Order</button>
+          </div>
+        </div>
+      </div>
+      <div id="secondRow">
+        <!-- GET Request : Get details of a particular Purchase Order -->
+        <form
+          action="{% url 'getPurchaseOrder' 'po_id' %}"
+          method="get"
+          id="getPurchaseOrderBox"
+        >
+          <h2>Get Purchase Order</h2>
+          <input
+            type="text"
+            name="po_id"
+            id="po_id"
+            placeholder="Purchase Order ID"
+            required
+          />
+          <button id="getPurchaseOrder">Get Purchase Order</button>
+        </form>
+
+        <!-- GET Request : Get details of all Purchase Orders -->
+        <form
+          action="{% url 'getAllPurchaseOrders' %}"
+          method="get"
+          id="getAllPurchaseOrdersBox"
+        >
+          <h2>Get All Purchase Orders</h2>
+          <button type="submit" id="getAllPurchaseOrders">
+            Get All Purchase Orders
+          </button>
+        </form>
+      </div>
+      <div id="thirdRow">
+        <!-- PUT Request : Update a particular Purchase Order -->
+        <div id="updatePurchaseOrderBox">
+          <h2>Update Purchase Order</h2>
+          <input
+            type="text"
+            name="updated_po_id"
+            id="updated_po_id"
+            placeholder="Purchase Order ID"
+          />
+          <div id="deliveryDateBox">
+            <label for="updated_delivery_date">Delivery Date: </label>
+            <input
+              type="datetime-local"
+              name="updated_delivery_date"
+              id="updated_delivery_date"
+            />
+          </div>
+          <div id="issueDateBox">
+            <label for="updated_issue_date">Issue Date: </label>
+            <input
+              type="datetime-local"
+              name="updated_issue_date"
+              id="updated_issue_date"
+            />
+          </div>
+          <select name="updated_status" id="updated_status">
+            <option selected disabled>Select Status</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input
+            type="text"
+            name="updated_quality_rating"
+            id="updated_quality_rating"
+            placeholder="Quality Rating"
+          />
+          <button id="updatePurchaseOrder">Update Purchase Order</button>
+        </div>
+
+        <!-- DELETE Request : Delete a particular Purchase Order -->
+        <div id="deletePurchaseOrderBox">
+          <h2>Delete Purchase Order</h2>
+          <input
+            type="text"
+            name="delete_po_id"
+            id="delete_po_id"
+            placeholder="Purchase Order ID"
+          />
+          <button id="deletePurchaseOrder">Delete Purchase Order</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details Box : Display the data fetched from the backend/database -->
+    <div id="detailsBox">
+      {% if po %}
+      <div class="details">
+        <h1>Purchase Order ID: {{po.po_number}}</h1>
+        <p><strong>Vendor:</strong> {{po.vendor.vendor_code}}</p>
+        <p><strong>Order Date:</strong> {{po.order_date}}</p>
+        <p><strong>Delivery Date:</strong> {{po.delivery_date}}</p>
+        {% for key, value in po.items.items %}
+        <ul>
+          <li>
+            <strong>{{ key }}</strong> -
+            <ul>
+              <li>Name: {{ value.name }}</li>
+              <li>Details: {{ value.details }}</li>
+              <li>Quantity: {{ value.quantity }}</li>
+            </ul>
+          </li>
+        </ul>
+        {% endfor %}
+        <p><strong>Total Quantity:</strong> {{ po.quantity }}</p>
+        <p><strong>Status:</strong> {{ po.status }}</p>
+        <p><strong>Quality Rating:</strong> {{ po.quality_rating }}</p>
+        <p><strong>Issue Date:</strong> {{ po.issue_date }}</p>
+        {% if po.acknowledgement_date %}
+        <p>
+          <strong>Acknowledgement Date:</strong> {{ po.acknowledgement_date }}
+        </p>
+        {% else %}
+        <button onclick="getAcknowledged('{{ po.po_number }}')">
+          Acknowledge Order
+        </button>
+        {% endif %}
+      </div>
+      {% endif %} 
+      {% if pos %}
+      {% for p in pos %}
+      <div class="details">
+        <h1>Purchase Order ID: {{p.po_number}}</h1>
+        <p><strong>Vendor:</strong> {{p.vendor.vendor_code}}</p>
+        <p><strong>Order Date:</strong> {{p.order_date}}</p>
+        <p><strong>Delivery Date:</strong> {{p.delivery_date}}</p>
+        {% for key, value in p.items.items %}
+        <ul>
+          <li>
+            <strong>{{ key }}</strong> -
+            <ul>
+              <li>Name: {{ value.name }}</li>
+              <li>Details: {{ value.details }}</li>
+              <li>Quantity: {{ value.quantity }}</li>
+            </ul>
+          </li>
+        </ul>
+        {% endfor %}
+        <p><strong>Total Quantity:</strong> {{ p.quantity }}</p>
+        <p><strong>Status:</strong> {{ p.status }}</p>
+        <p><strong>Quality Rating:</strong> {{ p.quality_rating }}</p>
+        <p><strong>Issue Date:</strong> {{ p.issue_date }}</p>
+        {% if p.acknowledgement_date %}
+        <p>
+          <strong>Acknowledgement Date:</strong> {{ p.acknowledgement_date }}
+        </p>
+        {% else %}
+        <button onclick="getAcknowledged('{{ p.po_number }}')">
+          Acknowledge Order
+        </button>
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+
+    <script>
+      // For printing the messages sent from backend for POST and GET Requests
+      var message = "{{ message }}";
+      if (message.length > 0) {
+        alert(message);
+      }
+
+      // Function to disable the past dates
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentDatetime = new Date();
+        const currentDatetimeString = formatDatetime(currentDatetime);
+
+        document.getElementById("order_date").min = currentDatetimeString;
+        document.getElementById("delivery_date").min = currentDatetimeString;
+        document.getElementById("updated_delivery_date").min = currentDatetimeString;
+        document.getElementById("updated_issue_date").min = currentDatetimeString;
+
+        function formatDatetime(datetime) {
+          const year = datetime.getFullYear();
+          const month = String(datetime.getMonth() + 1).padStart(2, "0");
+          const day = String(datetime.getDate()).padStart(2, "0");
+          const hours = String(datetime.getHours()).padStart(2, "0");
+          const minutes = String(datetime.getMinutes()).padStart(2, "0");
+
+          return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+      });
+
+      // Function to add new Item
+      var ctr = 2;
+      document.getElementById("addItem").addEventListener("click", function () {
+        var liElement = document.createElement("li");
+        liElement.className = "item";
+        liElement.innerHTML = `<strong>Item${ctr}</strong>`;
+        ctr = ctr + 1;
+
+        var itemName = document.createElement("input");
+        itemName.type = "text";
+        itemName.name = "itemname";
+        itemName.className = "itemname";
+        itemName.placeholder = "Item Name";
+        var itemDetails = document.createElement("input");
+        itemDetails.type = "text";
+        itemDetails.name = "itemdetails";
+        itemDetails.className = "itemdetails";
+        itemDetails.placeholder = "Item Details";
+        var itemQuantity = document.createElement("input");
+        itemQuantity.type = "number";
+        itemQuantity.name = "itemquantity";
+        itemQuantity.className = "itemquantity";
+        itemQuantity.placeholder = "Item Quantity";
+        itemQuantity.min = "1";
+        itemQuantity.value = "1";
+
+        liElement.appendChild(itemName);
+        liElement.appendChild(itemDetails);
+        liElement.appendChild(itemQuantity);
+
+        document.getElementById("items").appendChild(liElement);
+      });
+
+      // Function to convert Items list to JSON
+      var total_quantity = 0;
+      function itemsListToJSON() {
+        var item_num = 1;
+        var items = {};
+
+        document
+          .querySelectorAll("#items > .item")
+          .forEach(function (itemElement) {
+            var itemName = itemElement.querySelector(".itemname").value;
+            var itemDetails = itemElement.querySelector(".itemdetails").value;
+            var itemQuantity = itemElement.querySelector(".itemquantity").value;
+            total_quantity = total_quantity + parseInt(itemQuantity);
+
+            var item = {
+              name: itemName,
+              details: itemDetails,
+              quantity: itemQuantity,
+            };
+
+            items[`Item ${item_num}`] = item;
+            item_num = item_num + 1;
+          });
+
+        return items;
+      }
+
+      // POST Request to add a new purchase order
+      document.getElementById("addPurchaseOrder").addEventListener("click", function () {
+          var vendor_id = document.getElementById("vendor_id").value;
+          var order_date = document.getElementById("order_date").value;
+          var delivery_date = document.getElementById("delivery_date").value
+          var items = itemsListToJSON();
+          var quantity = total_quantity
+
+          if (vendor_id && order_date && delivery_date && items && quantity) {
+
+            var url = "/api/purchase_orders/";
+  
+            var data = {
+              vendor_id: vendor_id,
+              order_date: order_date,
+              delivery_date: delivery_date,
+              items: items,
+              quantity: quantity,
+            };
+  
+            fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify(data),
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  alert("Network response is not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                alert(data["message"]);
+                location.reload();
+              })
+              .catch((error) => {
+                alert(error);
+              });
+          }
+          else {
+            alert("Provide all the details!!");
+          }
+
+        });
+
+      // PUT Request to update a particular purchase order
+      document
+        .getElementById("updatePurchaseOrder")
+        .addEventListener("click", function () {
+          var po_id = document.getElementById("updated_po_id").value;
+          var delivery_date = document.getElementById("updated_delivery_date").value;
+          var status = document.getElementById("updated_status").value;
+          var quality_rating =  document.getElementById("updated_quality_rating").value;
+          var issue_date =  document.getElementById("updated_issue_date").value;
+
+          if (po_id && (delivery_date || status || quality_rating || issue_date)) {
+            var url = "/api/purchase_orders/" + po_id;
+
+            var data = {
+              po_id: po_id,
+              delivery_date: delivery_date,
+              status: status,
+              quality_rating: quality_rating,
+              issue_date: issue_date,
+            };
+
+            fetch(url, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify(data),
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  alert("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                alert(data["message"]);
+                location.reload();
+              })
+              .catch((error) => {
+                alert(error);
+              });
+          }
+          else{
+            alert("Provide all the details!!");
+          }
+        });
+
+      // DELETE Request to delete a particular purchase order
+      document
+        .getElementById("deletePurchaseOrder")
+        .addEventListener("click", function () {
+          var po_id = document.getElementById("delete_po_id").value;
+
+          if (po_id) {
+            var url = "/api/purchase_orders/" + po_id;
+
+            fetch(url, {
+              method: "DELETE",
+              headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  alert("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                alert(data["message"]);
+                location.reload();
+              })
+              .catch((error) => {
+                alert(error);
+              });
+          }
+          else {
+            alert("Provide the Purchase Order ID!!");
+          }
+        });
+
+        function getAcknowledged(po_id) {
+          var url = "/api/purchase_orders/" + po_id + "/acknowledge/";
+
+          fetch(url)
+            .then((response) => {
+              if (!response.ok) {
+                alert("Network response is not ok");
+              }
+
+              return response.json();
+            })
+            .then((data) => {
+              alert(data["message"]);
+              location.reload();
+            })
+            .catch((error) => {
+              alert(error);
+            });
+          }
+
+      // Function to get CSRF token from cookies
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          var cookies = document.cookie.split(";");
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+    </script>
+  </body>
+</html>

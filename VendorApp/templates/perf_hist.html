@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/perf_hist.css' %}" />
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <title>Performance History Page</title>
+  </head>
+  <body>
+    <div id="titleAndSearchBox">
+      <div id="titleBox">
+        <h1>Performance</h1>
+        <a href="{% url 'homePage' %}">Home Page</a>
+      </div>
+
+      <!-- GET Request : Get the performance of a particular vendor -->
+      <form id="searchBox" action="{% url 'getPerformance' %}" method="get">
+        <input
+          type="text"
+          name="vendor_id"
+          id="vendor_id"
+          placeholder="Vendor ID"
+          required
+        />
+        <button id="getPerformanceBtn">Get Performance</button>
+      </form>
+    </div>
+    <div id="graph">{{ graph|safe }}</div>
+    {% if serialized_performances %}
+    <table id="dataArray">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>On Time Delivery Rate</th>
+          <th>Quality Rating Average</th>
+          <th>Average Response Time</th>
+          <th>Fulfillment Rate</th>
+        </tr>
+      </thead>
+      <tbody id="dataBody"></tbody>
+    </table>
+    {% endif %}
+    <script>
+      const serialized_performances = JSON.parse('{{ serialized_performances | safe }}');
+      const tableBody = document.getElementById("dataBody");
+
+      for (let i = 0; i < serialized_performances.length; i++) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+        <td>${
+          serialized_performances[i].fields.date !== null
+            ? serialized_performances[i].fields.date
+            : "-"
+        }</td>
+        <td>${
+          serialized_performances[i].fields.on_time_delivery_rate !== null
+            ? serialized_performances[i].fields.on_time_delivery_rate
+            : "-"
+        }</td>
+        <td>${
+          serialized_performances[i].fields.quality_rating_avg !== null
+            ? serialized_performances[i].fields.quality_rating_avg
+            : "-"
+        }</td>
+        <td>${
+          serialized_performances[i].fields.average_response_time !== null
+            ? serialized_performances[i].fields.average_response_time
+            : "-"
+        }</td>
+        <td>${
+          serialized_performances[i].fields.fulfillment_rate !== null
+            ? serialized_performances[i].fields.fulfillment_rate
+            : "-"
+        }</td>
+    `;
+        tableBody.appendChild(row);
+      }
+    </script>
+  </body>
+</html>
